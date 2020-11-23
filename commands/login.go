@@ -73,7 +73,7 @@ var loginCommand = &cobra.Command{
 				return errors.New("Request failed")
 			}
 		}
-		fmt.Println("Login finished!")
+		fmt.Println("Login success!")
 
 		return nil
 	},
