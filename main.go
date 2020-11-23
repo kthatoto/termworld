@@ -7,6 +7,7 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"ioutil"
 
 	"github.com/spf13/cobra"
 	"github.com/gorilla/websocket"
@@ -15,10 +16,14 @@ import (
 func main() {
 	u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/gaming"}
 	httpHeader := http.Header{}
-	httpHeader.Set("X-Termworld-Token", "")
+	bytes, err := ioutil.ReadFile("./token")
+	if err != nil {
+		panic(err)
+	}
+	httpHeader.Set("X-Termworld-Token", string(bytes))
 	conn, _, err := websocket.DefaultDialer.Dial(u.String(), httpHeader)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	defer conn.Close()
 
