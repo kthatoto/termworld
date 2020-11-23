@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/kthatoto/termworld/cmd"
+	"github.com/kthatoto/termworld/commands"
 )
 
 func main() {
-	cmd.Run()
+	commands.Execute()
 }
