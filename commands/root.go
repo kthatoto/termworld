@@ -38,7 +38,11 @@ func initConfig() {
 	}
 
 	viper.AddConfigPath(fmt.Sprintf("%s/.termworld", home))
-	viper.SetConfigName("config")
+	viper.SetConfigType("yml")
+	err = viper.SafeWriteConfigAs(fmt.Sprintf("%s/.termworld/config", home))
+	if err != nil {
+		fmt.Println(err)
+	}
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
