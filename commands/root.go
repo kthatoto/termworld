@@ -21,8 +21,7 @@ var rootCommand = &cobra.Command{
 
 func Execute() {
 	if err := rootCommand.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		er(err)
 	}
 }
 
@@ -33,19 +32,25 @@ func init() {
 func initConfig() {
 	home, err := homedir.Dir()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		er(err)
 	}
 
 	viper.AddConfigPath(fmt.Sprintf("%s/.termworld", home))
-	viper.SetConfigType("yml")
-	err = viper.SafeWriteConfigAs(fmt.Sprintf("%s/.termworld/config", home))
-	if err != nil {
-		fmt.Println(err)
-	}
-	viper.AutomaticEnv()
+	viper.SetConfigName("config")
+	viper.SetConfigType("env")
+	viper.SetDefault("token", "")
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		os.Mkdir(fmt.Sprintf("%s/.termworld", home), 0755)
+		if err = viper.SafeWriteConfigAs(fmt.Sprintf("%s/.termworld/config", home)); err != nil {
+			er(err)
+		}
+		if err = viper.ReadInConfig(); err != nil {
+			er(err)
+		}
 	}
+}
+
+func er(msg interface{}) {
+	fmt.Fprintln(os.Stderr, msg)
+	os.Exit(1)
 }
