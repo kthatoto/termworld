@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"net/http"
 	"bytes"
 	"encoding/json"
+	"net/http"
 
 	"github.com/spf13/viper"
 )
@@ -17,7 +17,7 @@ func (httpClient *HttpClient) Call(method string, url string, param interface{})
 	if param != nil {
 		params, _ = json.Marshal(param)
 	}
-	req, err := http.NewRequest(method, "http://localhost:8080" + url, bytes.NewBuffer(params))
+	req, err := http.NewRequest(method, "http://localhost:8080"+url, bytes.NewBuffer(params))
 	if err != nil {
 		return resp, err
 	}
