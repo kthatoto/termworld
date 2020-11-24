@@ -47,7 +47,7 @@ var playerCreateCommand = &cobra.Command{
 		case 403:
 			fmt.Println("Your players count already reached max count")
 			return nil
-		case 408:
+		case 409:
 			fmt.Println("The name is already used")
 			return nil
 		default:
