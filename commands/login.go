@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	"encoding/json"
-	"bytes"
-	"net/http"
 	"errors"
+	"encoding/json"
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/kthatoto/termworld/utils"
 )
 
 func init() {
@@ -31,12 +31,12 @@ var loginCommand = &cobra.Command{
 			email = string(scanner.Text())
 		}
 
+		httpClient := utils.HttpClient{WithToken: false}
 		type RequestBody struct {
 			Email string `json:"email"`
 		}
-		param, _ := json.Marshal(RequestBody{email})
-		u := "http://localhost:8080/login/new"
-		resp, err := http.Post(u, "application/json", bytes.NewBuffer(param))
+		param := RequestBody{email}
+		resp, err := httpClient.Call("POST", "/login/new", param)
 		if err != nil {
 			return err
 		}
@@ -45,9 +45,8 @@ var loginCommand = &cobra.Command{
 		}
 		fmt.Printf("Sent mail to %s\nPlease check and click link on the mail to verify\n", email)
 
-		u = "http://localhost:8080/login"
 		for {
-			resp, err := http.Post(u, "application/json", bytes.NewBuffer(param))
+			resp, err := httpClient.Call("POST", "/login", param)
 			if err != nil {
 				return err
 			}

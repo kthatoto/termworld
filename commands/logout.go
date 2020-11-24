@@ -2,10 +2,11 @@ package commands
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/kthatoto/termworld/utils"
 )
 
 func init() {
@@ -16,20 +17,8 @@ var logoutCommand = &cobra.Command{
 	Use: "logout",
 	Short: "Logout command",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		token := viper.Get("token").(string)
-		if len(token) == 0 {
-			fmt.Println("Not logged in")
-			return nil
-		}
-
-		u := "http://localhost:8080/logout"
-		req, err := http.NewRequest("DELETE", u, nil)
-		if err != nil {
-			return err
-		}
-		req.Header.Set("X-Termworld-Token", token)
-		client := new(http.Client)
-		resp, err := client.Do(req)
+		httpClient := utils.HttpClient{WithToken: true}
+		resp, err := httpClient.Call("DELETE", "/logout", nil)
 		if err != nil {
 			return err
 		}
