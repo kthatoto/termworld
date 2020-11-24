@@ -1,8 +1,10 @@
 package commands
 
 import (
+	"fmt"
 	"errors"
 	"encoding/json"
+	"io/ioutil"
 
 	"github.com/spf13/cobra"
 
@@ -27,11 +29,15 @@ var playerCommand = &cobra.Command{
 			return errors.New("Request failed")
 		}
 
-		var responseBody models.PlayersResponseBody
-		if err := json.Unmarshal(responseBody); err != nil {
+		bytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
 			return err
 		}
-		for player := range responseBody {
+		var responseBody models.PlayersResponseBody
+		if err := json.Unmarshal(bytes, &responseBody); err != nil {
+			return err
+		}
+		for _, player := range responseBody.Players {
 			fmt.Printf("ID:%s Name:%s\n", player.ID, player.Name)
 		}
 		return nil
