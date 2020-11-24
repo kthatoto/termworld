@@ -14,17 +14,22 @@ import (
 	"github.com/kthatoto/termworld/utils"
 )
 
+var email string
+
 func init() {
 	rootCommand.AddCommand(loginCommand)
+	loginCommand.PersistentFlags().StringVar(&email, "email", "", "Email to login")
 }
-
-var email string
 
 var loginCommand = &cobra.Command{
 	Use: "login",
 	Short: "Login command",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(email) == 0 {
+		email = viper.Get("email").(string)
+		for {
+			if len(email) > 0 {
+				break
+			}
 			fmt.Print("Please enter email: ")
 			scanner := bufio.NewScanner(os.Stdin)
 			scanner.Scan()
@@ -44,6 +49,8 @@ var loginCommand = &cobra.Command{
 			return errors.New("Request failed")
 		}
 		fmt.Printf("Sent mail to %s\nPlease check and click link on the mail to verify\n", email)
+		viper.Set("email", email)
+		viper.WriteConfig()
 
 		for {
 			resp, err := httpClient.Call("POST", "/login", param)
@@ -76,8 +83,4 @@ var loginCommand = &cobra.Command{
 
 		return nil
 	},
-}
-
-func init() {
-	loginCommand.PersistentFlags().StringVar(&email, "email", "", "Email to login")
 }

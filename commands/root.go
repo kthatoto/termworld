@@ -39,6 +39,7 @@ func initConfig() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("env")
 	viper.SetDefault("token", "")
+	viper.SetDefault("email", "")
 	if err := viper.ReadInConfig(); err != nil {
 		os.Mkdir(fmt.Sprintf("%s/.termworld", home), 0755)
 		if err = viper.SafeWriteConfigAs(fmt.Sprintf("%s/.termworld/config", home)); err != nil {
