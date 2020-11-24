@@ -1,16 +1,16 @@
 package main
 
 import (
-	"net/url"
-	"net/http"
-	"fmt"
-	"os"
 	"bufio"
-	"strings"
+	"fmt"
 	"ioutil"
+	"net/http"
+	"net/url"
+	"os"
+	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/gorilla/websocket"
+	"github.com/spf13/cobra"
 )
 
 func websocket() {
