@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"errors"
 	// "net/url"
 	// "net/http"
 
@@ -46,6 +47,10 @@ var startCommand = &cobra.Command{
 			WorkDir:     "./",
 			Umask:       027,
 		}
+		already, _ := ctx.Search()
+		if already != nil {
+			return errors.New("Already started!")
+		}
 		child, err := ctx.Reborn()
 		if err != nil {
 			return err
@@ -57,9 +62,9 @@ var startCommand = &cobra.Command{
 		fmt.Println("-----------------------")
 		fmt.Println("Start daemon")
 
-		for {
+		for i := 0; i < 5; i++ {
 			time.Sleep(1 * time.Second)
-			fmt.Println(time.Now())
+			fmt.Println(i)
 		}
 		return nil
 	},
