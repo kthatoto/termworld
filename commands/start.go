@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"os"
 	"time"
 	// "net/url"
 	// "net/http"
@@ -33,15 +34,19 @@ var startCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		if err := os.Chdir(home+"/.termworld"); err != nil {
+			return err
+		}
+
 		ctx := &daemon.Context{
 			PidFileName: "termworld.pid",
 			PidFilePerm: 0644,
 			LogFileName: "termworld.log",
 			LogFilePerm: 0640,
-			WorkDir:     fmt.Sprintf("%s/.termworld", home),
+			WorkDir:     "./",
 			Umask:       027,
 		}
-		child, err := ctx.Rebort()
+		child, err := ctx.Reborn()
 		if err != nil {
 			return err
 		}
@@ -53,8 +58,9 @@ var startCommand = &cobra.Command{
 		fmt.Println("Start daemon")
 
 		for {
-			time.Sleep(3 * time.Second)
+			time.Sleep(1 * time.Second)
 			fmt.Println(time.Now())
 		}
+		return nil
 	},
 }

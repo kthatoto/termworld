@@ -13,6 +13,7 @@ var rootCommand = &cobra.Command{
 	Use: "termworld",
 	Short: "Welcome to termworld!",
 	Long: "Welcome to termworld! Long ver",
+	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cmd.Usage()
 		return nil
