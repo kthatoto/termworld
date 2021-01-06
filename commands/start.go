@@ -5,11 +5,11 @@ import (
 	"os"
 	"time"
 	"errors"
-	// "net/url"
-	// "net/http"
+	"net/url"
+	"net/http"
 
 	"github.com/spf13/cobra"
-	// "github.com/spf13/viper"
+	"github.com/spf13/viper"
 	homedir "github.com/mitchellh/go-homedir"
 	daemon "github.com/sevlyar/go-daemon"
 )
@@ -22,14 +22,14 @@ var startCommand = &cobra.Command{
 	Use: "start",
 	Short: "Game start command",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/gaming"}
-		// httpHeader := http.Header{}
-		// token := viper.Get("token").(string)
-		// conn, _, err := websocket.DefaultDialer.Dial(u.String(), httpHeader)
-		// if err != nil {
-		// 	return err
-		// }
-		// defer conn.Close()
+		u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/gaming"}
+		httpHeader := http.Header{}
+		token := viper.Get("token").(string)
+		conn, _, err := websocket.DefaultDialer.Dial(u.String(), httpHeader)
+		if err != nil {
+			return err
+		}
+		defer conn.Close()
 
 		home, err := homedir.Dir()
 		if err != nil {
