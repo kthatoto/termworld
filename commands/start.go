@@ -10,6 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/gorilla/websocket"
 	homedir "github.com/mitchellh/go-homedir"
 	daemon "github.com/sevlyar/go-daemon"
 )
@@ -25,6 +26,7 @@ var startCommand = &cobra.Command{
 		u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/gaming"}
 		httpHeader := http.Header{}
 		token := viper.Get("token").(string)
+		httpHeader.Set("X-Termworld-Token", token)
 		conn, _, err := websocket.DefaultDialer.Dial(u.String(), httpHeader)
 		if err != nil {
 			return err
