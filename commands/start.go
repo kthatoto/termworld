@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"fmt"
+	"time"
 	"os"
 	"errors"
 	"net/url"
@@ -23,23 +25,8 @@ var startCommand = &cobra.Command{
 	Use: "start",
 	Short: "Game start command",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/gaming"}
-		httpHeader := http.Header{}
-		token := viper.Get("token").(string)
-		httpHeader.Set("X-Termworld-Token", token)
-		conn, _, err := websocket.DefaultDialer.Dial(u.String(), httpHeader)
-		if err != nil {
-			return err
-		}
-		defer conn.Close()
-
-		home, err := homedir.Dir()
-		if err != nil {
-			return err
-		}
-		if err := os.Chdir(home+"/.termworld"); err != nil {
-			return err
-		}
+		chdirHome()
+		fmt.Println("start!!!")
 
 		ctx := &daemon.Context{
 			PidFileName: "termworld.pid",
@@ -49,6 +36,7 @@ var startCommand = &cobra.Command{
 			WorkDir:     "./",
 			Umask:       027,
 		}
+
 		already, _ := ctx.Search()
 		if already != nil {
 			return errors.New("Already started!")
@@ -62,8 +50,35 @@ var startCommand = &cobra.Command{
 		}
 		defer ctx.Release()
 
-		game.SendRequest(conn)
-		go game.ReadMessages(conn)
+		u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/gaming"}
+		httpHeader := http.Header{}
+		token := viper.Get("token").(string)
+		httpHeader.Set("X-Termworld-Token", token)
+		conn, _, err := websocket.DefaultDialer.Dial(u.String(), httpHeader)
+		if err != nil {
+			return err
+		}
+		defer conn.Close()
+
+		daemonize(conn)
 		return nil
 	},
+}
+
+func daemonize(conn *websocket.Conn) {
+	fmt.Println("called daemonize")
+	game.SendRequest(conn)
+	go game.ReadMessages(conn)
+	time.Sleep(5 * time.Second)
+	return
+}
+
+func chdirHome() {
+	home, err := homedir.Dir()
+	if err != nil {
+		return
+	}
+	if err := os.Chdir(home+"/.termworld"); err != nil {
+		return
+	}
 }
