@@ -2,7 +2,6 @@ package commands
 
 import (
 	"os"
-	"time"
 	"errors"
 	"net/url"
 	"net/http"
@@ -58,7 +57,7 @@ var startCommand = &cobra.Command{
 		}
 		defer conn.Close()
 
-		daemonize(conn)
+		daemonWork(conn)
 		return nil
 	},
 }
@@ -73,15 +72,10 @@ func chdirHome() {
 	}
 }
 
-func daemonize(conn *websocket.Conn) {
-	game.SendRequest(conn)
-
+func daemonWork(conn *websocket.Conn) {
 	done := make(chan bool)
+	go game.HandleProcedure(conn, done)
 	go game.ReadMessages(conn, done)
-	go func() {
-		time.Sleep(30 * time.Second)
-		done <- true
-	}()
 	<-done
 	return
 }

@@ -16,8 +16,3 @@ func ReadMessages(conn *websocket.Conn, done chan bool) {
 		fmt.Printf("read message: %s\n", message)
 	}
 }
-
-func SendRequest(conn *websocket.Conn) {
-	requestString := "requestMap"
-	conn.WriteMessage(websocket.TextMessage, []byte(requestString))
-}
