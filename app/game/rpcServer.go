@@ -13,14 +13,19 @@ type Procedures int
 var proceduresDone chan bool
 
 func (p *Procedures) Stop(_ int, result *bool) error {
+	fmt.Println("called Stop!!")
 	proceduresDone <- true
 	*result = true
+	fmt.Println("Finish stop procedure")
 	return nil
 }
 
 func HandleProcedures(conn *websocket.Conn, done chan bool) {
 	go func() {
-		done <- <-proceduresDone
+		fmt.Println("waiting proceduresDone")
+		a := <-proceduresDone
+		fmt.Println("done!!! proceduresDone")
+		done <- a
 	}()
 	procedures := new(Procedures)
 	err := rpc.Register(procedures)
