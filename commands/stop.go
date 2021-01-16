@@ -19,11 +19,9 @@ var stopCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Println("RPC connected")
 
 		var result *bool
 		err = client.Call("Procedures.Stop", 0, result)
-		fmt.Println("Finished call procedure")
 		if err != nil {
 			fmt.Printf("ERROR: %+v\n", err)
 		}
