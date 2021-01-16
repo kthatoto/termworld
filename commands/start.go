@@ -1,8 +1,6 @@
 package commands
 
 import (
-	"fmt"
-	"time"
 	"os"
 	"errors"
 	"net/url"
@@ -26,7 +24,6 @@ var startCommand = &cobra.Command{
 	Short: "Game start command",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		chdirHome()
-		fmt.Println("start!!!")
 
 		ctx := &daemon.Context{
 			PidFileName: "termworld.pid",
@@ -65,14 +62,6 @@ var startCommand = &cobra.Command{
 	},
 }
 
-func daemonize(conn *websocket.Conn) {
-	fmt.Println("called daemonize")
-	game.SendRequest(conn)
-	go game.ReadMessages(conn)
-	time.Sleep(5 * time.Second)
-	return
-}
-
 func chdirHome() {
 	home, err := homedir.Dir()
 	if err != nil {
@@ -81,4 +70,13 @@ func chdirHome() {
 	if err := os.Chdir(home+"/.termworld"); err != nil {
 		return
 	}
+}
+
+func daemonize(conn *websocket.Conn) {
+	game.SendRequest(conn)
+
+	done := make(chan bool)
+	go game.ReadMessages(conn, done)
+	<-done
+	return
 }

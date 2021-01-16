@@ -6,11 +6,11 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func ReadMessages(conn *websocket.Conn) {
+func ReadMessages(conn *websocket.Conn, done chan bool) {
 	for {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
-			fmt.Println("Finished")
+			done <- true
 			break
 		}
 		fmt.Printf("read message: %s\n", message)
