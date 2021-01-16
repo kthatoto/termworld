@@ -2,6 +2,7 @@ package commands
 
 import (
 	"os"
+	"time"
 	"errors"
 	"net/url"
 	"net/http"
@@ -77,6 +78,10 @@ func daemonize(conn *websocket.Conn) {
 
 	done := make(chan bool)
 	go game.ReadMessages(conn, done)
+	go func() {
+		time.Sleep(30 * time.Second)
+		done <- true
+	}()
 	<-done
 	return
 }
