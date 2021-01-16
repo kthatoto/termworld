@@ -1,9 +1,7 @@
 package commands
 
 import (
-	"fmt"
 	"os"
-	"time"
 	"errors"
 	"net/url"
 	"net/http"
@@ -13,6 +11,8 @@ import (
 	"github.com/gorilla/websocket"
 	homedir "github.com/mitchellh/go-homedir"
 	daemon "github.com/sevlyar/go-daemon"
+
+	"github.com/kthatoto/termworld/app/game"
 )
 
 func init() {
@@ -61,13 +61,9 @@ var startCommand = &cobra.Command{
 			return nil
 		}
 		defer ctx.Release()
-		fmt.Println("-----------------------")
-		fmt.Println("Start daemon")
 
-		for i := 0; i < 5; i++ {
-			time.Sleep(1 * time.Second)
-			fmt.Println(i)
-		}
+		game.SendRequest(conn)
+		go game.ReadMessages(conn)
 		return nil
 	},
 }
