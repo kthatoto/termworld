@@ -74,7 +74,7 @@ func chdirHome() {
 
 func daemonWork(conn *websocket.Conn) {
 	done := make(chan bool)
-	go game.HandleProcedure(conn, done)
+	go game.HandleProcedures(conn, done)
 	go game.ReadMessages(conn, done)
 	<-done
 	return

@@ -1,11 +1,10 @@
 package commands
 
 import (
-	"os"
+	"fmt"
+	"net/rpc"
 
 	"github.com/spf13/cobra"
-	homedir "github.com/mitchellh/go-homedir"
-	daemon "github.com/sevlyar/go-daemon"
 )
 
 func init() {
@@ -16,23 +15,16 @@ var stopCommand = &cobra.Command{
 	Use: "stop",
 	Short: "Game stop command",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		home, err := homedir.Dir()
+		client, err := rpc.DialHTTP("tcp", "localhost:8128")
 		if err != nil {
 			return err
 		}
-		if err := os.Chdir(home+"/.termworld"); err != nil {
-			return err
-		}
 
-		ctx := &daemon.Context{
-			PidFileName: "termworld.pid",
-			PidFilePerm: 0644,
-			LogFileName: "termworld.log",
-			LogFilePerm: 0640,
-			WorkDir:     "./",
-			Umask:       027,
+		var result *bool
+		err = client.Call("Procedures.Stop", 0, result)
+		if err != nil {
+			fmt.Printf("%+v\n", err)
 		}
-		ctx.Release()
 		return nil
 	},
 }

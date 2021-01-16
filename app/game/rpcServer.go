@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"net/rpc"
@@ -11,11 +12,13 @@ import (
 type Procedures int
 var proceduresDone chan bool
 
-func (p *Procedures) Stop() {
+func (p *Procedures) Stop(_ int, result *bool) error {
 	proceduresDone <- true
+	*result = true
+	return nil
 }
 
-func HandleProcedure(conn *websocket.Conn, done chan bool) {
+func HandleProcedures(conn *websocket.Conn, done chan bool) {
 	go func() {
 		done <- <-proceduresDone
 	}()
