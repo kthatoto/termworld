@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"net/rpc"
 
 	"github.com/spf13/cobra"
@@ -21,10 +20,7 @@ var stopCommand = &cobra.Command{
 		}
 
 		var result *bool
-		err = client.Call("Procedures.Stop", 0, result)
-		if err != nil {
-			fmt.Printf("ERROR: %+v\n", err)
-		}
+		client.Call("Procedures.Stop", 0, result)
 		return nil
 	},
 }
