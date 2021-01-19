@@ -5,6 +5,7 @@ import (
 	"errors"
 	"encoding/json"
 	"io/ioutil"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -37,9 +38,37 @@ var playerListCommand = &cobra.Command{
 		if err := json.Unmarshal(bytes, &responseBody); err != nil {
 			return err
 		}
-		for _, player := range responseBody.Players {
-			fmt.Printf("ID:%s Name:%s\n", player.ID, player.Name)
+		for i, player := range responseBody.Players {
+			first := i == 0
+			last := i == len(responseBody.Players) - 1
+			displayPlayerInfo(player, first, last)
 		}
 		return nil
 	},
+}
+
+func displayPlayerInfo(player *models.Player, first, last bool) {
+	width := 30
+	const horizontalLine := strings.Repeat("━", width)
+	if (first) {
+		fmt.Println("┏" + horizontalLine + "┓")
+	}
+
+	drawLine(fmt.Sprintf(" Name: %s", player.Name))
+	drawLine(fmt.Sprintf(" Live: %s", player.Live ? "true" : "false"))
+	drawLine(fmt.Sprintf(" Status:"))
+	drawLine(fmt.Sprintf("   HP: 10 / 10"))
+
+	if (last) {
+		fmt.Println("┗" + horizontalLine + "┛")
+	} else {
+		fmt.Println("┣" + horizontalLine + "┫")
+	}
+}
+
+func drawLine(content string, width: int) {
+	fmt.Print("┃")
+	fmt.Print(content)
+	fmt.Print(strings.Repeat("━", width - len(content)))
+	fmt.Println("┃")
 }
