@@ -10,6 +10,7 @@ import (
 
 type Procedures int
 var proceduresDone chan bool
+var wsConn *websocket.Conn
 
 func (p *Procedures) Stop(_ int, result *bool) error {
 	proceduresDone <- true
@@ -18,20 +19,20 @@ func (p *Procedures) Stop(_ int, result *bool) error {
 }
 
 func HandleProcedures(conn *websocket.Conn, done chan bool) {
+	wsConn = conn
 	proceduresDone = make(chan bool)
 	go func() {
 		done <- <-proceduresDone
 	}()
 
 	procedures := new(Procedures)
-	err := rpc.Register(procedures)
-	if err != nil {
-		done <- true
-		return
-	}
+	playerProcedures := new(PlayerProcedures)
+	rpc.Register(procedures)
+	rpc.Register(playerProcedures)
+
 	rpc.HandleHTTP()
 	var listener net.Listener
-	listener, err = net.Listen("tcp", ":8128")
+	listener, err := net.Listen("tcp", ":8128")
 	if err != nil {
 		done <- true
 		return

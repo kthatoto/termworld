@@ -20,7 +20,7 @@ var stopCommand = &cobra.Command{
 		}
 
 		var result *bool
-		client.Call("Procedures.Stop", 0, result)
+	 	client.Call("Procedures.Stop", 0, result)
 		return nil
 	},
 }
