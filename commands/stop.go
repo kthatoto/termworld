@@ -19,8 +19,12 @@ var stopCommand = &cobra.Command{
 			return err
 		}
 
-		var result *bool
-	 	client.Call("Procedures.Stop", 0, result)
+		var result bool
+		result = false
+		err = client.Call("Procedures.Stop", 0, &result)
+		if err != nil {
+			return err
+		}
 		return nil
 	},
 }

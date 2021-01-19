@@ -29,9 +29,11 @@ var playerCommand = &cobra.Command{
 			return err
 		}
 		proceduresCommand := fmt.Sprintf("PlayerProcedures.%s", strings.Title(command))
-		var result *bool
-		err = client.Call(proceduresCommand, playerName, result)
-		if (!*result) {
+
+		var result bool
+		result = false
+		err = client.Call(proceduresCommand, playerName, &result)
+		if err != nil || !result {
 			fmt.Println(err)
 			return err
 		}
