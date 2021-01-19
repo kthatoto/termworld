@@ -73,6 +73,6 @@ func displayPlayerInfo(player *models.Player, first, last bool) {
 func drawLine(content string, width int) {
 	fmt.Print("┃")
 	fmt.Print(content)
-	fmt.Print(strings.Repeat("━", width - len(content)))
+	fmt.Print(strings.Repeat(" ", width - len(content)))
 	fmt.Println("┃")
 }
