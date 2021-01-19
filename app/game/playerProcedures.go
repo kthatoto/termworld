@@ -2,6 +2,8 @@ package game
 
 import (
 	"fmt"
+
+	"github.com/gorilla/websocket"
 )
 
 type PlayerProcedures int
@@ -11,7 +13,8 @@ type PlayerProcedureArgs struct {
 }
 
 func (p *PlayerProcedures) Start(args PlayerProcedureArgs, result *bool) error {
-	fmt.Printf("%+v", args)
+	message := fmt.Sprintf("{\"playerName\":\"%s\",\"command\":\"start\"}", args.PlayerName)
+	WSConn.WriteMessage(websocket.TextMessage, []byte(message))
 	*result = true
 	return nil
 }

@@ -10,7 +10,7 @@ import (
 
 type Procedures int
 var proceduresDone chan bool
-var wsConn *websocket.Conn
+var WSConn *websocket.Conn
 
 func (p *Procedures) Stop(_ int, result *bool) error {
 	proceduresDone <- true
@@ -19,7 +19,7 @@ func (p *Procedures) Stop(_ int, result *bool) error {
 }
 
 func HandleProcedures(conn *websocket.Conn, done chan bool) {
-	wsConn = conn
+	WSConn = conn
 	proceduresDone = make(chan bool)
 	go func() {
 		done <- <-proceduresDone
