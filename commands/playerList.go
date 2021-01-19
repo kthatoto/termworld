@@ -41,7 +41,7 @@ var playerListCommand = &cobra.Command{
 		for i, player := range responseBody.Players {
 			first := i == 0
 			last := i == len(responseBody.Players) - 1
-			displayPlayerInfo(player, first, last)
+			displayPlayerInfo(&player, first, last)
 		}
 		return nil
 	},
@@ -49,15 +49,19 @@ var playerListCommand = &cobra.Command{
 
 func displayPlayerInfo(player *models.Player, first, last bool) {
 	width := 30
-	const horizontalLine := strings.Repeat("━", width)
+	horizontalLine := strings.Repeat("━", width)
 	if (first) {
 		fmt.Println("┏" + horizontalLine + "┓")
 	}
 
-	drawLine(fmt.Sprintf(" Name: %s", player.Name))
-	drawLine(fmt.Sprintf(" Live: %s", player.Live ? "true" : "false"))
-	drawLine(fmt.Sprintf(" Status:"))
-	drawLine(fmt.Sprintf("   HP: 10 / 10"))
+	drawLine(fmt.Sprintf(" Name: %s", player.Name), width)
+	if (player.Live) {
+		drawLine(" Live: true", width)
+	} else {
+		drawLine(" Live: false", width)
+	}
+	drawLine(fmt.Sprintf(" Status:"), width)
+	drawLine(fmt.Sprintf("   HP: 10 / 10"), width)
 
 	if (last) {
 		fmt.Println("┗" + horizontalLine + "┛")
@@ -66,7 +70,7 @@ func displayPlayerInfo(player *models.Player, first, last bool) {
 	}
 }
 
-func drawLine(content string, width: int) {
+func drawLine(content string, width int) {
 	fmt.Print("┃")
 	fmt.Print(content)
 	fmt.Print(strings.Repeat("━", width - len(content)))
