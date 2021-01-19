@@ -8,6 +8,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type PlayerProcedureArgs struct {
+	PlayerName string
+	Options    []string
+}
+
 func init() {
 	rootCommand.AddCommand(playerCommand)
 }
@@ -23,16 +28,17 @@ var playerCommand = &cobra.Command{
 
 		playerName := args[0]
 		command := args[1]
-		// options := args[2:]
+		options := args[2:]
 		client, err := rpc.DialHTTP("tcp", "localhost:8128")
 		if err != nil {
 			return err
 		}
 		proceduresCommand := fmt.Sprintf("PlayerProcedures.%s", strings.Title(command))
 
+		playerProcedureArgs := PlayerProcedureArgs{ playerName, options }
 		var result bool
 		result = false
-		err = client.Call(proceduresCommand, playerName, &result)
+		err = client.Call(proceduresCommand, playerProcedureArgs, &result)
 		if err != nil || !result {
 			fmt.Println(err)
 			return err

@@ -1,8 +1,17 @@
 package game
 
-type PlayerProcedures int
+import (
+	"fmt"
+)
 
-func (p *PlayerProcedures) Start(playerName string, result *bool) error {
+type PlayerProcedures int
+type PlayerProcedureArgs struct {
+	PlayerName string
+	Options []string
+}
+
+func (p *PlayerProcedures) Start(args PlayerProcedureArgs, result *bool) error {
+	fmt.Printf("%+v", args)
 	*result = true
 	return nil
 }
