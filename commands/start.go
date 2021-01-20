@@ -55,7 +55,6 @@ var startCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		defer conn.Close()
 
 		daemonWork(conn)
 		return nil
@@ -73,6 +72,7 @@ func chdirHome() {
 }
 
 func daemonWork(conn *websocket.Conn) {
+	defer conn.Close()
 	done := make(chan bool)
 	go game.HandleProcedures(conn, done)
 	go game.ReadMessages(conn, done)
