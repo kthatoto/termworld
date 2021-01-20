@@ -57,6 +57,7 @@ var startCommand = &cobra.Command{
 			return err
 		}
 
+		fmt.Println("Started!")
 		daemonWork(conn)
 		return nil
 	},
