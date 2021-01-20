@@ -27,6 +27,8 @@ var stopCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		fmt.Println("Stopped!")
 		return nil
 	},
 }
