@@ -39,9 +39,14 @@ var playerCommand = &cobra.Command{
 		var result bool
 		result = false
 		err = client.Call(proceduresCommand, playerProcedureArgs, &result)
+
 		if err != nil || !result {
-			fmt.Println(err)
-			return err
+			if strings.Contains(err.Error(), "can't find method") {
+				fmt.Printf("error: can't find method [%s]\n", command)
+				return nil
+			}
+			fmt.Printf("error: %s\n", err)
+			return nil
 		}
 		return nil
 	},
