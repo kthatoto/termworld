@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"net/rpc"
 
 	"github.com/spf13/cobra"
@@ -16,7 +17,8 @@ var stopCommand = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := rpc.DialHTTP("tcp", "localhost:8128")
 		if err != nil {
-			return err
+			fmt.Println("Not started")
+			return nil
 		}
 
 		var result bool

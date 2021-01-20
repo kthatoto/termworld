@@ -2,7 +2,7 @@ package commands
 
 import (
 	"os"
-	"errors"
+	"fmt"
 	"net/url"
 	"net/http"
 
@@ -36,7 +36,8 @@ var startCommand = &cobra.Command{
 
 		already, _ := ctx.Search()
 		if already != nil {
-			return errors.New("Already started!")
+			fmt.Println("Already started!")
+			return nil
 		}
 		child, err := ctx.Reborn()
 		if err != nil {
