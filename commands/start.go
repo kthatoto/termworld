@@ -43,7 +43,10 @@ var startCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		resp := make(chan string)
 		if child != nil {
+			fmt.Println(<-resp)
+			close(resp)
 			return nil
 		}
 		defer ctx.Release()
@@ -54,10 +57,11 @@ var startCommand = &cobra.Command{
 		httpHeader.Set("X-Termworld-Token", token)
 		conn, _, err := websocket.DefaultDialer.Dial(u.String(), httpHeader)
 		if err != nil {
+			resp <- err.Error()
 			return err
 		}
 
-		fmt.Println("Started!")
+		resp <- "Started!"
 		daemonWork(conn)
 		return nil
 	},
