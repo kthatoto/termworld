@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"encoding/json"
 
 	"github.com/gorilla/websocket"
 
@@ -14,16 +15,25 @@ type PlayerProcedureArgs struct {
 	Options []string
 }
 
+type Command struct {
+	PlayerName string   `json:"playerName"`
+	Command    string   `json:"command"`
+	Options    []string `json:"options"`
+	RequestId  string   `json:"requestId"`
+}
+
 func (p *PlayerProcedures) Start(args PlayerProcedureArgs, resp *interface{}) error {
 	requestId := utils.RandomString(12)
 	responseMap[requestId] = make(chan Response)
 
-	request := fmt.Sprintf(
-		"{\"playerName\":\"%s\",\"command\":\"start\",\"options\":null,\"requestId\":\"%s\"}",
-		args.PlayerName,
-		requestId,
-	)
-	WSConn.WriteMessage(websocket.TextMessage, []byte(request))
+	command := Command{
+		PlayerName: args.PlayerName,
+		Command: "start",
+		Options: nil,
+		RequestId: requestId,
+	}
+	requestJson, _ := json.Marshal(command)
+	WSConn.WriteMessage(websocket.TextMessage, []byte(requestJson))
 
 	response := <-responseMap[requestId]
 	fmt.Println(response.Message)
@@ -34,3 +44,11 @@ func (p *PlayerProcedures) Start(args PlayerProcedureArgs, resp *interface{}) er
 
 	return nil
 }
+
+// func (p *PlayerProcedures) Stop(args PlayerProcedureArgs, resp *interface{}) error {
+// 	requestId := utils.RandomString(12)
+// 	responseMap[requestId] = make(chan Response)
+//
+// 	request := fmt.Sprintf(
+// 	)
+// }
