@@ -14,14 +14,23 @@ type PlayerProcedureArgs struct {
 	Options []string
 }
 
-func (p *PlayerProcedures) Start(args PlayerProcedureArgs, result *bool) error {
+func (p *PlayerProcedures) Start(args PlayerProcedureArgs, resp *interface{}) error {
 	requestId := utils.RandomString(12)
-	message := fmt.Sprintf(
+	responseMap[requestId] = make(chan Response)
+
+	request := fmt.Sprintf(
 		"{\"playerName\":\"%s\",\"command\":\"start\",\"options\":null,\"requestId\":\"%s\"}",
 		args.PlayerName,
 		requestId,
 	)
-	WSConn.WriteMessage(websocket.TextMessage, []byte(message))
-	*result = true
+	WSConn.WriteMessage(websocket.TextMessage, []byte(request))
+
+	response := <-responseMap[requestId]
+	fmt.Println(response.Message)
+	close(responseMap[requestId])
+	delete(responseMap, requestId)
+
+	*resp = response.Message
+
 	return nil
 }

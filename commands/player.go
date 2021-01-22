@@ -36,11 +36,11 @@ var playerCommand = &cobra.Command{
 		proceduresCommand := fmt.Sprintf("PlayerProcedures.%s", strings.Title(command))
 
 		playerProcedureArgs := PlayerProcedureArgs{ playerName, options }
-		var result bool
-		result = false
-		err = client.Call(proceduresCommand, playerProcedureArgs, &result)
+		var response interface{}
+		response = nil
+		err = client.Call(proceduresCommand, playerProcedureArgs, &response)
 
-		if err != nil || !result {
+		if err != nil {
 			if strings.Contains(err.Error(), "can't find method") {
 				fmt.Printf("error: can't find method [%s]\n", command)
 				return nil
@@ -48,6 +48,7 @@ var playerCommand = &cobra.Command{
 			fmt.Printf("error: %s\n", err)
 			return nil
 		}
+		fmt.Println(response)
 		return nil
 	},
 }
