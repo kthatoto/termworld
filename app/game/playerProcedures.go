@@ -45,10 +45,25 @@ func (p *PlayerProcedures) Start(args PlayerProcedureArgs, resp *interface{}) er
 	return nil
 }
 
-// func (p *PlayerProcedures) Stop(args PlayerProcedureArgs, resp *interface{}) error {
-// 	requestId := utils.RandomString(12)
-// 	responseMap[requestId] = make(chan Response)
-//
-// 	request := fmt.Sprintf(
-// 	)
-// }
+func (p *PlayerProcedures) Stop(args PlayerProcedureArgs, resp *interface{}) error {
+	requestId := utils.RandomString(12)
+	responseMap[requestId] = make(chan Response)
+
+	command := Command{
+		PlayerName: args.PlayerName,
+		Command: "stop",
+		Options: nil,
+		RequestId: requestId,
+	}
+	requestJson, _ := json.Marshal(command)
+	WSConn.WriteMessage(websocket.TextMessage, []byte(requestJson))
+
+	response := <-responseMap[requestId]
+	fmt.Println(response.Message)
+	close(responseMap[requestId])
+	delete(responseMap, requestId)
+
+	*resp = response.Message
+
+	return nil
+}
