@@ -29,7 +29,7 @@ func (p *PlayerProcedures) Start(args PlayerProcedureArgs, resp *interface{}) er
 	command := Command{
 		PlayerName: args.PlayerName,
 		Command: "start",
-		Options: nil,
+		Options: args.Options,
 		RequestId: requestId,
 	}
 	requestJson, _ := json.Marshal(command)
@@ -52,7 +52,30 @@ func (p *PlayerProcedures) Stop(args PlayerProcedureArgs, resp *interface{}) err
 	command := Command{
 		PlayerName: args.PlayerName,
 		Command: "stop",
-		Options: nil,
+		Options: args.Options,
+		RequestId: requestId,
+	}
+	requestJson, _ := json.Marshal(command)
+	WSConn.WriteMessage(websocket.TextMessage, []byte(requestJson))
+
+	response := <-responseMap[requestId]
+	fmt.Println(response.Message)
+	close(responseMap[requestId])
+	delete(responseMap, requestId)
+
+	*resp = response.Message
+
+	return nil
+}
+
+func (p *PlayerProcedures) Move(args PlayerProcedureArgs, resp *interface{}) error {
+	requestId := utils.RandomString(12)
+	responseMap[requestId] = make(chan Response)
+
+	command := Command{
+		PlayerName: args.PlayerName,
+		Command: "move",
+		Options: args.Options,
 		RequestId: requestId,
 	}
 	requestJson, _ := json.Marshal(command)
