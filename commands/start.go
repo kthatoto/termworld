@@ -36,7 +36,7 @@ var startCommand = &cobra.Command{
 
 		already, _ := ctx.Search()
 		if already != nil {
-			fmt.Println("Already started!")
+			fmt.Println("Already started")
 			return nil
 		}
 		child, err := ctx.Reborn()
@@ -44,7 +44,7 @@ var startCommand = &cobra.Command{
 			return err
 		}
 		if child != nil {
-			fmt.Println("Starting... Please check status")
+			fmt.Println("Started")
 			return nil
 		}
 		defer ctx.Release()
