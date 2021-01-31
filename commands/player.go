@@ -4,11 +4,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type PlayerProcedureArgs struct {
-	PlayerName string
-	Options    []string
-}
-
 func init() {
 	rootCommand.AddCommand(playerCommand)
 }
