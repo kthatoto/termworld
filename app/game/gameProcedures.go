@@ -11,13 +11,14 @@ import (
 
 type GameProcedures int
 type GameProcedureArgs struct {
+	Command    string
 	PlayerName string
-	Options []string
+	Options    []string
 }
 
 type Command struct {
-	PlayerName string   `json:"playerName"`
 	Command    string   `json:"command"`
+	PlayerName string   `json:"playerName"`
 	Options    []string `json:"options"`
 	RequestId  string   `json:"requestId"`
 }
