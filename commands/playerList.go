@@ -61,7 +61,7 @@ func displayPlayerInfo(player *models.Player, first, last bool) {
 		drawLine(" Live: false", width)
 	}
 	drawLine(fmt.Sprintf(" Status:"), width)
-	drawLine(fmt.Sprintf("   HP: %s / %s", player.Status.HP, player.Status.MaxHP), width)
+	drawLine(fmt.Sprintf("   HP: %d / %d", player.Status.HP, player.Status.MaxHP), width)
 
 	if (last) {
 		fmt.Println("┗" + horizontalLine + "┛")
