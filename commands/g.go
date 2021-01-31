@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type PlayerProcedureArgs struct {
+type GameProcedureArgs struct {
 	PlayerName string
 	Options    []string
 }
@@ -33,12 +33,12 @@ var gCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		proceduresCommand := fmt.Sprintf("PlayerProcedures.%s", strings.Title(command))
+		proceduresCommand := fmt.Sprintf("GameProcedures.%s", strings.Title(command))
 
-		playerProcedureArgs := PlayerProcedureArgs{ playerName, options }
+		gameProcedureArgs := GameProcedureArgs{ playerName, options }
 		var response interface{}
 		response = nil
-		err = client.Call(proceduresCommand, playerProcedureArgs, &response)
+		err = client.Call(proceduresCommand, gameProcedureArgs, &response)
 
 		if err != nil {
 			if strings.Contains(err.Error(), "can't find method") {
