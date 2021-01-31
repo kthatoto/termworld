@@ -9,6 +9,7 @@ import (
 )
 
 type GameProcedureArgs struct {
+	Command    string
 	PlayerName string
 	Options    []string
 }
@@ -33,9 +34,9 @@ var gCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		proceduresCommand := fmt.Sprintf("GameProcedures.%s", strings.Title(command))
+		proceduresCommand := fmt.Sprintf("GameProcedures.Execute")
 
-		gameProcedureArgs := GameProcedureArgs{ playerName, options }
+		gameProcedureArgs := GameProcedureArgs{ command, playerName, options }
 		var response interface{}
 		response = nil
 		err = client.Call(proceduresCommand, gameProcedureArgs, &response)
