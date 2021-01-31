@@ -1,9 +1,9 @@
 package commands
 
 import (
-	// "fmt"
-	// "strings"
-	// "net/rpc"
+	"fmt"
+	"strings"
+	"net/rpc"
 
 	"github.com/spf13/cobra"
 )
@@ -14,43 +14,41 @@ type PlayerProcedureArgs struct {
 }
 
 func init() {
-	rootCommand.AddCommand(playerCommand)
+	rootCommand.AddCommand(gCommand)
 }
 
-var playerCommand = &cobra.Command{
-	Use: "player",
-	Short: "Player command",
+var gCommand = &cobra.Command{
+	Use: "g",
+	Short: "Game controller command",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cmd.Usage()
+		if (len(args) == 0) {
+			cmd.Usage()
+			return nil
+		}
+
+		playerName := args[0]
+		command := args[1]
+		options := args[2:]
+		client, err := rpc.DialHTTP("tcp", "localhost:8128")
+		if err != nil {
+			return err
+		}
+		proceduresCommand := fmt.Sprintf("PlayerProcedures.%s", strings.Title(command))
+
+		playerProcedureArgs := PlayerProcedureArgs{ playerName, options }
+		var response interface{}
+		response = nil
+		err = client.Call(proceduresCommand, playerProcedureArgs, &response)
+
+		if err != nil {
+			if strings.Contains(err.Error(), "can't find method") {
+				fmt.Printf("error: can't find method [%s]\n", command)
+				return nil
+			}
+			fmt.Printf("error: %s\n", err)
+			return nil
+		}
+		fmt.Println(response)
 		return nil
-		// if (len(args) == 0) {
-		// 	cmd.Usage()
-		// 	return nil
-		// }
-        //
-		// playerName := args[0]
-		// command := args[1]
-		// options := args[2:]
-		// client, err := rpc.DialHTTP("tcp", "localhost:8128")
-		// if err != nil {
-		// 	return err
-		// }
-		// proceduresCommand := fmt.Sprintf("PlayerProcedures.%s", strings.Title(command))
-        //
-		// playerProcedureArgs := PlayerProcedureArgs{ playerName, options }
-		// var response interface{}
-		// response = nil
-		// err = client.Call(proceduresCommand, playerProcedureArgs, &response)
-        //
-		// if err != nil {
-		// 	if strings.Contains(err.Error(), "can't find method") {
-		// 		fmt.Printf("error: can't find method [%s]\n", command)
-		// 		return nil
-		// 	}
-		// 	fmt.Printf("error: %s\n", err)
-		// 	return nil
-		// }
-		// fmt.Println(response)
-		// return nil
 	},
 }
