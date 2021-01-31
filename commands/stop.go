@@ -17,7 +17,7 @@ var stopCommand = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		client, err := rpc.DialHTTP("tcp", "localhost:8128")
 		if err != nil {
-			fmt.Println("Not started")
+			fmt.Println("Not working")
 			return nil
 		}
 
@@ -28,7 +28,7 @@ var stopCommand = &cobra.Command{
 			return err
 		}
 
-		fmt.Println("Stopped!")
+		fmt.Println("Stopped")
 		return nil
 	},
 }
