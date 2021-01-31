@@ -9,8 +9,8 @@ import (
 	"github.com/kthatoto/termworld/utils"
 )
 
-type PlayerProcedures int
-type PlayerProcedureArgs struct {
+type GameProcedures int
+type GameProcedureArgs struct {
 	PlayerName string
 	Options []string
 }
@@ -22,7 +22,7 @@ type Command struct {
 	RequestId  string   `json:"requestId"`
 }
 
-func (p *PlayerProcedures) Start(args PlayerProcedureArgs, resp *interface{}) error {
+func (p *GameProcedures) Start(args GameProcedureArgs, resp *interface{}) error {
 	requestId := utils.RandomString(12)
 	responseMap[requestId] = make(chan Response)
 
@@ -45,7 +45,7 @@ func (p *PlayerProcedures) Start(args PlayerProcedureArgs, resp *interface{}) er
 	return nil
 }
 
-func (p *PlayerProcedures) Stop(args PlayerProcedureArgs, resp *interface{}) error {
+func (p *GameProcedures) Stop(args GameProcedureArgs, resp *interface{}) error {
 	requestId := utils.RandomString(12)
 	responseMap[requestId] = make(chan Response)
 
@@ -68,7 +68,7 @@ func (p *PlayerProcedures) Stop(args PlayerProcedureArgs, resp *interface{}) err
 	return nil
 }
 
-func (p *PlayerProcedures) Move(args PlayerProcedureArgs, resp *interface{}) error {
+func (p *GameProcedures) Move(args GameProcedureArgs, resp *interface{}) error {
 	requestId := utils.RandomString(12)
 	responseMap[requestId] = make(chan Response)
 

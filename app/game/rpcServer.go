@@ -26,9 +26,9 @@ func HandleProcedures(conn *websocket.Conn, done chan bool) {
 	}()
 
 	procedures := new(Procedures)
-	playerProcedures := new(PlayerProcedures)
+	gameProcedures := new(GameProcedures)
 	rpc.Register(procedures)
-	rpc.Register(playerProcedures)
+	rpc.Register(gameProcedures)
 
 	rpc.HandleHTTP()
 	var listener net.Listener
