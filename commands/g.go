@@ -34,12 +34,11 @@ var gCommand = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		proceduresCommand := fmt.Sprintf("GameProcedures.Execute")
 
 		gameProcedureArgs := GameProcedureArgs{ command, playerName, options }
 		var response interface{}
 		response = nil
-		err = client.Call(proceduresCommand, gameProcedureArgs, &response)
+		err = client.Call("GameProcedures.Execute", gameProcedureArgs, &response)
 
 		if err != nil {
 			if strings.Contains(err.Error(), "can't find method") {
