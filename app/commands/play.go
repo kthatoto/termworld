@@ -1,13 +1,12 @@
 package commands
 
 import (
-	"os"
 	"fmt"
-	"bufio"
-	"strings"
 	"net/rpc"
 
 	"github.com/spf13/cobra"
+
+	"github.com/kthatoto/termworld/app/game"
 )
 
 func init() {
@@ -46,28 +45,26 @@ var playCommand = &cobra.Command{
 			return nil
 		}
 
-		stdin := bufio.NewScanner(os.Stdin)
-		for {
-			stdin.Scan()
-			text := stdin.Text()
-			input := strings.Split(text, " ")
-			command := input[0]
-			options := input[1:]
-			if command == "q" {
-				break
-			}
+		game.Play()
+		// stdin := bufio.NewScanner(os.Stdin)
+		// for {
+		// 	stdin.Scan()
+		// 	text := stdin.Text()
+		// 	input := strings.Split(text, " ")
+		// 	command := input[0]
+		// 	options := input[1:]
+		// 	if command == "q" {
+		// 		break
+		// 	}
+		//
+		// 	gameProcedureArgs = GameProcedureArgs{ command, playerName, options }
+		// 	err = client.Call("GameProcedures.Execute", gameProcedureArgs, &response)
+		// 	if err != nil {
+		// 		break
+		// 	}
+		// 	fmt.Println(response)
+		// }
 
-			gameProcedureArgs = GameProcedureArgs{ command, playerName, options }
-			err = client.Call("GameProcedures.Execute", gameProcedureArgs, &response)
-			if err != nil {
-				break
-			}
-			fmt.Println(response)
-		}
-
-		if err != nil {
-			return err
-		}
 		return nil
 	},
 }
