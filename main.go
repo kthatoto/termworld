@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/kthatoto/termworld/commands"
+	"github.com/kthatoto/termworld/app/commands"
 )
 
 func main() {
