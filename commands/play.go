@@ -24,9 +24,26 @@ var playCommand = &cobra.Command{
 		}
 
 		playerName := args[0]
+		options := args[1:]
 		client, err := rpc.DialHTTP("tcp", "localhost:8128")
 		if err != nil {
 			return err
+		}
+
+		var response interface{}
+		response = nil
+		gameProcedureArgs := GameProcedureArgs{
+			Command: "touch",
+			PlayerName: playerName,
+			Options: options,
+		}
+		err = client.Call("GameProcedures.Execute", gameProcedureArgs, &response)
+		if err != nil {
+			return err
+		}
+		if response != "live" {
+			fmt.Println(response)
+			return nil
 		}
 
 		stdin := bufio.NewScanner(os.Stdin)
@@ -40,9 +57,7 @@ var playCommand = &cobra.Command{
 				break
 			}
 
-			gameProcedureArgs := GameProcedureArgs{ command, playerName, options }
-			var response interface{}
-			response = nil
+			gameProcedureArgs = GameProcedureArgs{ command, playerName, options }
 			err = client.Call("GameProcedures.Execute", gameProcedureArgs, &response)
 			if err != nil {
 				break
