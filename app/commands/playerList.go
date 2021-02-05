@@ -9,7 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/kthatoto/termworld/utils"
+	"github.com/kthatoto/termworld/app/utils"
 	"github.com/kthatoto/termworld/app/models"
 )
 

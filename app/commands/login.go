@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/kthatoto/termworld/utils"
+	"github.com/kthatoto/termworld/app/utils"
 )
 
 var email string

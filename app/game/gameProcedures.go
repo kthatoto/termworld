@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"github.com/kthatoto/termworld/utils"
+	"github.com/kthatoto/termworld/app/utils"
 )
 
 type GameProcedures int
